@@ -3,8 +3,13 @@ package vista;
 import controlador.ControladorUsuarios;
 import modelo.Rol;
 import modelo.Usuario;
+import util.DatabaseConnection;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
+
 /**
  * Ventana de VentanaLogin
  * Valida credenciales y apertura interfaz según rol de usuario
@@ -29,8 +34,24 @@ public class VentanaLogin extends JFrame{
         setTitle("Login - Biblioteca");
         setSize(350, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
+
+        // Cierre del conector a BBDD al cerrar esta ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                try {
+                    DatabaseConnection.getInstancia().closeConnection();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                dispose();
+                System.exit(0);
+            }
+        });
 
         // Configuración de los botones
         btnCancelar.addActionListener(e -> limpiar());

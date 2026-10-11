@@ -30,6 +30,7 @@ public class Main {
         // Apertura de pantalla de login
         SwingUtilities.invokeLater(() -> {
             new VentanaLogin().setVisible(true);
+
         });
     }
 

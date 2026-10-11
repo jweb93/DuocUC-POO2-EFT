@@ -1,7 +1,12 @@
 package vista;
 
+import util.DatabaseConnection;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 
 /**
  * Ventana principal para un usuario con rol Bibliotecario.
@@ -16,8 +21,24 @@ public class VentanaPrincipalBibliotecario extends JFrame {
         // Configuración base de la ventana
         setTitle("Menú Principal- Biblioteca");
         setSize(400, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        // Cierre del conector a BBDD al cerrar esta ventana
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                try {
+                    DatabaseConnection.getInstancia().closeConnection();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                dispose();
+                System.exit(0);
+            }
+        });
 
         // En su interior tendrá un panel central con 4 botones
         setLayout(new BorderLayout(10, 10));
